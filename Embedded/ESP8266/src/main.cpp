@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include "WiFiManager.h"
-#include "SerialManager.h"
+#include <WiFiManager.h>
+#include <SerialManager.h>
 #include "DataObject.h"
 
 WiFiManager wifiManager;
