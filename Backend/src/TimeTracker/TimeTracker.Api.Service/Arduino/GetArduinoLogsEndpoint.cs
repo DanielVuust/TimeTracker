@@ -4,7 +4,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace TimeRegistration.TimeTracker.Api.Service.GetTimeTracker;
 
-public class GetArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<Guid>.WithActionResult<ArduinoLogsResponse>
+public class GetArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<Guid>.WithActionResult<List<ArduinoLogsResponse>>
 {
     public GetArduinoLogsEndpoint()
     {
@@ -19,13 +19,13 @@ public class GetArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<Guid>.WithAc
         OperationId = "GetArduinoLogs",
         Tags = new[] { Constants.ApiTags.Arduino })
     ]
-    public override async Task<ActionResult<ArduinoLogsResponse>> HandleAsync([FromRoute] Guid arduinoId, CancellationToken cancellationToken = default)
+    public override async Task<ActionResult<List<ArduinoLogsResponse>>> HandleAsync([FromRoute] Guid arduinoId, CancellationToken cancellationToken = default)
     {
         //var uniqueId = Guid.NewGuid();  
         var timeStamp = DateTime.UtcNow;
         var status = "Start";
         //Call service/component to get Arduino logs from database
 
-        return new ActionResult<ArduinoLogsResponse>(new ArduinoLogsResponse(timeStamp, status));
+        return new ActionResult<List<ArduinoLogsResponse>>(new List<ArduinoLogsResponse>(){new ArduinoLogsResponse(timeStamp, status), new ArduinoLogsResponse(timeStamp, status) });
     }
 }

@@ -32,6 +32,17 @@ public class Startup
             c.SupportNonNullableReferenceTypes();
             c.EnableAnnotations();
         });
+
+        //Remove before production!!
+        services.AddCors(o => o.AddPolicy("AllowAllCors", builder =>
+        {
+            builder.WithOrigins("*")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+
+            // U Can Filter Here
+        }));
+
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -52,6 +63,9 @@ public class Startup
 
         app.UseRouting();
 
+        //Remove before production!!
+        app.UseCors("AllowAllCors");
+
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
@@ -60,6 +74,8 @@ public class Startup
 
         if (env.IsEnvironment("integration-test") || Infrastructure.Constants.Environment.IsGeneratingApi)
             return;
+
+        
 
         app.EnsureDatabaseMigrated();
         //If you want to add rebus you need to add it here!
