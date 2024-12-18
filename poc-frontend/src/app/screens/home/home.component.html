@@ -1,0 +1,23 @@
+<div>
+    <mat-form-field>
+        <mat-label>Input for Button 1</mat-label>
+        <input matInput #inputValue1>
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="makeApiRequest(inputValue1.value)">Button 1</button>
+</div>
+
+<div>
+    <mat-form-field>
+        <mat-label>Input for Button 2</mat-label>
+        <input matInput #inputValue2>
+    </mat-form-field>
+    <button mat-raised-button color="accent" (click)="makeApiRequest(inputValue2.value)">Button 2</button>
+</div>
+
+<div>
+    <mat-form-field>
+        <mat-label>Input for Button 3</mat-label>
+        <input matInput #inputValue3>
+    </mat-form-field>
+    <button mat-raised-button color="warn" (click)="makeApiRequest(inputValue3.value)">Button 3</button>
+</div>
