@@ -21,6 +21,6 @@ public static class Constants
 
     public static class ApiTags
     {
-        public const string TimeTracker = "TimeTracker";
+        public const string Arduino = "Arduino";
     }
 }

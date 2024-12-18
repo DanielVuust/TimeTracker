@@ -11,6 +11,6 @@ public static class ApplicationBuilderExtension
         using var serviceScope = app.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetRequiredService<TimeTrackerContext>();
 
-        context.Database.Migrate();
+        //context.Database.Migrate();
     }
 }
