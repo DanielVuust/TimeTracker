@@ -1,11 +1,11 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <WiFiManager.h>
-#include <SerialManager.h>
+#include <DeviceManager.h>
 #include "DataObject.h"
 
 WiFiManager wifiManager;
-SerialManager serialManager(wifiManager);
+DeviceManager deviceManager(wifiManager);
 
 // UnitID to determine cadence
 const int unitId = 1;  
@@ -20,20 +20,18 @@ void setup() {
 
 void loop() {
     wifiManager.handle();
-    serialManager.handleSerial();
+    deviceManager.handleSerial();
 
-    // Calculate the assigned second for this Arduino
     unsigned long assignedSecond = unitId % slotInterval;
     unsigned long currentMillis = millis();
     unsigned long currentSecond = (currentMillis / 1000) % slotInterval; 
 
     if (currentSecond == assignedSecond && wifiManager.isConnected()) {
-        const auto& objects = serialManager.getObjectList();
+        const auto& objects = deviceManager.getObjectList();
         if (!objects.empty()) {
             bool allSent = true;
 
             for (const auto &obj : objects) {
-                // Send data directly as a DataObject 
                 if (!wifiManager.sendDataToUrl("http://url/api", obj)) {
                     allSent = false;
                     break;
@@ -41,10 +39,10 @@ void loop() {
             }
 
             if (allSent) {
-                Serial.println("DBG: All data successfully sent to API.");
-                serialManager.clearObjectList();
+                Serial.println("EDBG: All data successfully sent to API.");
+                deviceManager.clearObjectList();
             } else {
-                Serial.println("DBG: Failed to send all data to API.");
+                Serial.println("EDBG: Failed to send all data to API.");
             }
         }
     }

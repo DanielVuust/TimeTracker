@@ -23,10 +23,10 @@ bool WiFiManager::isConnected() {
 }
 
 void WiFiManager::handleDisconnect() {
-    Serial.println("DBG: Handling Disconnect");
+    Serial.println("EDBG: Handling Disconnect");
     WiFi.disconnect();
     startAccessPoint();
-    Serial.println("DBG: Disconnected from Wi-Fi and started Access Point");
+    Serial.println("EDBG: Disconnected from Wi-Fi and started Access Point");
 }
 
 void WiFiManager::saveCredentials(const String &ssid, const String &password) {
@@ -63,8 +63,8 @@ bool WiFiManager::tryConnect() {
 
     WiFi.begin(ssid.c_str(), password.c_str());
     if (WiFi.waitForConnectResult() == WL_CONNECTED) {
-        Serial.println("DBG: Connected to Wi-Fi!");
-        Serial.print("DBG: IP Address: ");
+        Serial.println("EDBG: Connected to Wi-Fi!");
+        Serial.print("EDBG: IP Address: ");
         Serial.println(WiFi.localIP());
         connected = true;
         return true;
@@ -79,8 +79,8 @@ void WiFiManager::startAccessPoint() {
     IPAddress apIP(192, 168, 4, 1);
     IPAddress netMsk(255, 255, 255, 0);
     WiFi.softAPConfig(apIP, apIP, netMsk);
-    Serial.println("DBG: Started AP Mode. Connect to '" + String(AP_SSID) + "' with password '" + String(AP_PASSWORD) + "'");
-    Serial.print("DBG: IP Address: ");
+    Serial.println("EDBG: Started AP Mode. Connect to '" + String(AP_SSID) + "' with password '" + String(AP_PASSWORD) + "'");
+    Serial.print("EDBG: IP Address: ");
     Serial.println(WiFi.softAPIP());
     connected = false;
 }

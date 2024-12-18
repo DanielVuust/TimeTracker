@@ -39,11 +39,10 @@ public:
     bool sendDataToUrl(const String &url, const T &data);
 };
 
-// Template definition must be in the header
 template <typename T>
 bool WiFiManager::sendDataToUrl(const String &url, const T &data) {
     if (!isConnected()) {
-        Serial.println("DBG: Not connected to Wi-Fi. Cannot send data to API.");
+        Serial.println("EDBG: Not connected to Wi-Fi. Cannot send data to API.");
         return false;
     }
 
@@ -68,13 +67,13 @@ bool WiFiManager::sendDataToUrl(const String &url, const T &data) {
         unsigned long timeout = millis();
         while (client.available() == 0) {
             if (millis() - timeout > 5000) { 
-                Serial.println("DBG: Server response timeout.");
+                Serial.println("EDBG: Server response timeout.");
                 client.stop();
                 return false;
             }
         }
 
-        // Read the response
+        // Response
         String responseLine = client.readStringUntil('\n');
         Serial.println("Response: " + responseLine);
         if (responseLine.startsWith("HTTP/1.1 200")) {
@@ -82,12 +81,12 @@ bool WiFiManager::sendDataToUrl(const String &url, const T &data) {
             client.stop();
             return true;
         } else {
-            Serial.println("DBG: Server responded with error.");
+            Serial.println("EDBG: Server responded with error.");
             client.stop();
             return false;
         }
     } else {
-        Serial.println("DBG: Failed to connect to API.");
+        Serial.println("EDBG: Failed to connect to API.");
         return false;
     }
 }

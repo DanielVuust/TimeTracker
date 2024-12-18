@@ -1,3 +1,4 @@
+// File: DataObject.h
 #ifndef DATA_OBJECT_H
 #define DATA_OBJECT_H
 
@@ -7,7 +8,7 @@
 struct DataObject {
     String deviceId;
     String timestamp;
-    int status;
+    String status;
 
     void toJson(JsonDocument &doc) const {
         doc["deviceId"] = deviceId;

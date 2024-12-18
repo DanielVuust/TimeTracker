@@ -1,5 +1,6 @@
-#ifndef SERIAL_MANAGER_H
-#define SERIAL_MANAGER_H
+// File: DeviceManager.h
+#ifndef DEVICE_MANAGER_H
+#define DEVICE_MANAGER_H
 
 #include <Arduino.h>
 #include <vector>
@@ -7,13 +8,13 @@
 #include "WiFiManager.h"
 #include "DataObject.h"
 
-class SerialManager {
+class DeviceManager {
 private:
     WiFiManager &wifiManager;
     std::vector<DataObject> objectList;
 
 public:
-    SerialManager(WiFiManager &manager);
+    DeviceManager(WiFiManager &manager);
     void handleSerial();
     const std::vector<DataObject>& getObjectList() const;
     void clearObjectList();
