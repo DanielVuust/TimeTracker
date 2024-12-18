@@ -24,6 +24,8 @@ public class GetArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<Guid>.WithAc
         //var uniqueId = Guid.NewGuid();  
         var timeStamp = DateTime.UtcNow;
         var status = "Start";
+        //Call service/component to get Arduino logs from database
+
         return new ActionResult<ArduinoLogsResponse>(new ArduinoLogsResponse(timeStamp, status));
     }
 }
