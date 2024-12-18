@@ -1,7 +1,8 @@
 // File: WiFiManager.cpp
 #include "WiFiManager.h"
+#include <ArduinoJson.h>
 
-WiFiManager::WiFiManager() : server(80) {}
+WiFiManager::WiFiManager() : connected(false), server(80) {}
 
 void WiFiManager::begin() {
     EEPROM.begin(EEPROM_SIZE);
@@ -15,6 +16,17 @@ void WiFiManager::begin() {
 
 void WiFiManager::handle() {
     server.handleClient();
+}
+
+bool WiFiManager::isConnected() {
+    return connected;
+}
+
+void WiFiManager::handleDisconnect() {
+    Serial.println("DBG: Handling Disconnect");
+    WiFi.disconnect();
+    startAccessPoint();
+    Serial.println("DBG: Disconnected from Wi-Fi and started Access Point");
 }
 
 void WiFiManager::saveCredentials(const String &ssid, const String &password) {
@@ -51,12 +63,14 @@ bool WiFiManager::tryConnect() {
 
     WiFi.begin(ssid.c_str(), password.c_str());
     if (WiFi.waitForConnectResult() == WL_CONNECTED) {
-        Serial.println("Connected to Wi-Fi!");
-        Serial.print("IP Address: ");
+        Serial.println("DBG: Connected to Wi-Fi!");
+        Serial.print("DBG: IP Address: ");
         Serial.println(WiFi.localIP());
+        connected = true;
         return true;
     }
 
+    connected = false;
     return false;
 }
 
@@ -65,9 +79,10 @@ void WiFiManager::startAccessPoint() {
     IPAddress apIP(192, 168, 4, 1);
     IPAddress netMsk(255, 255, 255, 0);
     WiFi.softAPConfig(apIP, apIP, netMsk);
-    Serial.println("Started AP Mode. Connect to '" + String(AP_SSID) + "' with password '" + String(AP_PASSWORD) + "'");
-    Serial.print("IP Address: ");
+    Serial.println("DBG: Started AP Mode. Connect to '" + String(AP_SSID) + "' with password '" + String(AP_PASSWORD) + "'");
+    Serial.print("DBG: IP Address: ");
     Serial.println(WiFi.softAPIP());
+    connected = false;
 }
 
 void WiFiManager::setupWebServer() {
@@ -78,11 +93,12 @@ void WiFiManager::setupWebServer() {
 
 String WiFiManager::generateSSIDDropdown() {
     int n = WiFi.scanNetworks();
-    String dropdown = "<select name='ssid'>";
+    String dropdown;
+    dropdown += "<select name='ssid'>\n";
     for (int i = 0; i < n; i++) {
-        dropdown += "<option value='" + WiFi.SSID(i) + "'>" + WiFi.SSID(i) + "</option>";
+        dropdown += "  <option value='" + WiFi.SSID(i) + "'>" + WiFi.SSID(i) + "</option>\n";
     }
-    dropdown += "</select>";
+    dropdown += "</select>\n";
     return dropdown;
 }
 
