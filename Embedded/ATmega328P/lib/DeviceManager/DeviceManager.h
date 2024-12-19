@@ -5,6 +5,7 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 #include <DataObject.h>
+#include <RTClib.h>
 
 #define GUID_LENGTH 36
 #define MAX_BUTTONS 12

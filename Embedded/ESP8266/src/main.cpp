@@ -32,7 +32,7 @@ void loop() {
             bool allSent = true;
 
             for (const auto &obj : objects) {
-                if (!wifiManager.sendDataToUrl("http://url/api", obj)) {
+                if (!wifiManager.sendDataToUrl("http://localhost:61083/api/arduino/" + obj.deviceId + "/log", obj, "deviceId")) {
                     allSent = false;
                     break;
                 }
