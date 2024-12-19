@@ -11,7 +11,6 @@ public class TimeTrackerContext : DbContext
 
     public DbSet<OperationEntity>? Operations { get; set; }
     public DbSet<TimeTrackerEntity>? TimeTrackers { get; set; }
-    public DbSet<TimeTrackerEntity>? ArduinoEntity { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

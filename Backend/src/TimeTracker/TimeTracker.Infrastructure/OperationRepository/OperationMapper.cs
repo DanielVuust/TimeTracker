@@ -7,7 +7,7 @@ internal static class OperationMapper
     internal static OperationEntity Map(Operation operation)
     {
         var entity = new OperationEntity(operation.Id, operation.CreatedUtc, operation.ModifiedUtc,
-            operation.RequestId, operation.TimeTrackerId, operation.CreatedBy, operation.Name, operation.Status,
+            operation.RequestId, operation.ArduinoId, operation.CreatedBy, operation.Name, operation.Status,
             operation.CompletedUtc,
             DictionaryToString(operation.Data));
         return entity;
@@ -15,7 +15,7 @@ internal static class OperationMapper
 
     internal static Operation Map(OperationEntity operation)
     {
-        var model = new Operation(operation.Id, operation.RequestId, operation.CreatedBy, operation.TimeTrackerId,
+        var model = new Operation(operation.Id, operation.RequestId, operation.CreatedBy, operation.ArduinoId,
             operation.OperationName, operation.Status,
             operation.CreatedUtc, operation.ModifiedUtc,
             operation.CompletedUtc, StringToDictionary(operation.Data));

@@ -2,20 +2,20 @@
 public class Operation : BaseModel
 {
     public string RequestId { get; private set; }
-    public Guid TimeTrackerId { get; }
+    public Guid ArduinoId { get; }
     public string CreatedBy { get; }
     public OperationName Name { get; }
     public OperationStatus Status { get; private set; }
     public DateTime? CompletedUtc { get; private set; }
     public Dictionary<string, string>? Data { get; private set; }
 
-    public Operation(Guid id, string requestId, string createdBy, Guid timetrackerId, OperationName name,
+    public Operation(Guid id, string requestId, string createdBy, Guid arduinoId, OperationName name,
        OperationStatus status, DateTime createdUtc, DateTime modifiedUtc, DateTime? completedUtc,
        Dictionary<string, string>? data) : base(id)
     {
         RequestId = requestId;
         CreatedBy = createdBy;
-        TimeTrackerId = timetrackerId;
+        ArduinoId = arduinoId;
         Name = name;
         Status = status;
         CreatedUtc = createdUtc;
@@ -29,7 +29,7 @@ public class Operation : BaseModel
         Id = Guid.NewGuid();
         RequestId = Guid.NewGuid().ToString();
         CreatedBy = createdBy;
-        TimeTrackerId = timetrackerId;
+        ArduinoId = timetrackerId;
         Name = name;
         Status = status;
         CreatedUtc = DateTime.UtcNow;

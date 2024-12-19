@@ -7,5 +7,11 @@ public class TimeTrackerConfiguration : BaseEntityConfiguration<TimeTrackerEntit
     public override void Configure(EntityTypeBuilder<TimeTrackerEntity> builder)
     {
         base.Configure(builder);
+
+        builder.HasIndex(builder => builder.ArduinoId);
+
+        builder.Property(e => e.ArduinoId).IsRequired();
+        builder.Property(e => e.Timestamp).IsRequired();
+        builder.Property(e => e.Status).IsRequired();
     }
 }

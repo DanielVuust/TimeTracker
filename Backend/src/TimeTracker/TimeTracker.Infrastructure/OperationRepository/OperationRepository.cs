@@ -24,7 +24,7 @@ public class OperationRepository : BaseRepository<Operation, OperationEntity>, I
     public async Task<ICollection<Operation>> GetTimeTrackerOperations(Guid timetrackerId)
     {
         var timetracker = await GetOperationsDbSet()
-                    .Where(x => x.TimeTrackerId == timetrackerId)
+                    .Where(x => x.ArduinoId == timetrackerId)
                     .AsNoTracking()
                     .ToListAsync();
         return timetracker.Select(Map).ToImmutableHashSet();

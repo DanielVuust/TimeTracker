@@ -9,9 +9,9 @@ internal static class TimeTrackerEntityMapper
             model.Id,
             model.CreatedUtc,
             model.ModifiedUtc,
-            ArduinoEntityMapper.Map(model.Arduino),
-            model.Timestamp,
-            model.Status
+            model.ArduinoId,
+            model.LogsModel.Timestamp,
+            model.LogsModel.Status
         );
     }
 
@@ -21,9 +21,8 @@ internal static class TimeTrackerEntityMapper
             entity.Id,
             entity.CreatedUtc,
             entity.ModifiedUtc,
-            ArduinoEntityMapper.Map(entity.Arduino),
-            entity.Timestamp,
-            entity.Status
+            entity.ArduinoId,
+            new LogsModel(entity.Timestamp, entity.Status)
         );
     }
 }
