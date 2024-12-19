@@ -9,32 +9,34 @@ void DeviceManager::handleSerial() {
         input.trim();
 
         if (input.startsWith("ECMD:")) {
-            String command = input.substring(4);
+            String command = input.substring(5);
             if (command == "DISCONNECT") {
-                Serial.println("EDBG: DISCONNECT command received.");
+                wifiManager.debugPrintln("EDBG: DISCONNECT command received.");
                 wifiManager.handleDisconnect();
-                Serial.println("EDBG: WiFi disconnected and AP started.");
+                wifiManager.debugPrintln("EDBG: WiFi disconnected and AP started.");
             } else {
                 Serial.println("EDBG: Unknown command: " + command);
             }
         } else if (input.startsWith("EOBJ:")) {
-            String jsonString = input.substring(4);
+            String jsonString = input.substring(5);
             JsonDocument doc;
             DeserializationError error = deserializeJson(doc, jsonString);
 
             if (error) {
-                Serial.print("EDBG: Failed to parse JSON for object data: ");
-                Serial.println(error.c_str());
+                wifiManager.debugPrint("EDBG: Failed to parse JSON for object data: ");
+                wifiManager.debugPrintln(error.c_str());
             } else {
                 DataObject newObject = DataObject::fromJson(doc);
                 // Validate extracted data if needed
                 if (newObject.timestamp.length() > 0) {
                     objectList.push_back(newObject);
-                    Serial.println("EDBG: Object added - Timestamp: " + newObject.timestamp + ", Status: " + String(newObject.status));
+                    wifiManager.debugPrintln("EDBG: Object added - Timestamp: " + newObject.timestamp + ", Status: " + String(newObject.status));
                 } else {
-                    Serial.println("EDBG: Invalid object data received.");
+                    wifiManager.debugPrintln("EDBG: Invalid object data received.");
                 }
             }
+        } else if (input.startsWith("ADBG:")) {
+            wifiManager.debugPrintln(input.substring(5));
         }
     }
 }
@@ -45,5 +47,5 @@ const std::vector<DataObject>& DeviceManager::getObjectList() const {
 
 void DeviceManager::clearObjectList() {
     objectList.clear();
-    Serial.println("EDBG: Object list cleared.");
+    wifiManager.debugPrintln("EDBG: Object list cleared.");
 }

@@ -18,6 +18,10 @@ private:
     bool connected;
     ESP8266WebServer server;
 
+    // Debugging
+    WiFiServer debugServer{23};
+    WiFiClient debugClient;
+
     void saveCredentials(const String &ssid, const String &password);
     void loadCredentials();
     bool tryConnect();
@@ -25,6 +29,7 @@ private:
     void setupWebServer();
     void handleRoot();
     void handleSetup();
+    void handleDebug();
 
     String generateSSIDDropdown();
 
@@ -34,6 +39,10 @@ public:
     void handle();
     bool isConnected();
     void handleDisconnect();
+
+    // Debugging methods
+    void debugPrint(const String &message);
+    void debugPrintln(const String &message);
 
     template <typename T>
     bool sendDataToUrl(const String &url, const T &data, const String &excludeField = "");

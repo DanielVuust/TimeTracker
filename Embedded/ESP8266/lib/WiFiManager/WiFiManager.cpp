@@ -12,10 +12,23 @@ void WiFiManager::begin() {
         startAccessPoint();
         setupWebServer();
     }
+
+    debugServer.begin();
+    debugPrintln("EDBG: Debug server started.");
 }
 
 void WiFiManager::handle() {
     server.handleClient();
+    handleDebug();
+}
+
+void WiFiManager::handleDebug(){
+    if(!debugClient || !debugClient.connected()){
+        debugClient = debugServer.accept();
+        if(debugClient){
+            debugPrintln("EDBG: New client connected.");
+        }
+    }
 }
 
 bool WiFiManager::isConnected() {
@@ -23,10 +36,10 @@ bool WiFiManager::isConnected() {
 }
 
 void WiFiManager::handleDisconnect() {
-    Serial.println("EDBG: Handling Disconnect");
+    debugPrintln("EDBG: Handling Disconnect");
     WiFi.disconnect();
     startAccessPoint();
-    Serial.println("EDBG: Disconnected from Wi-Fi and started Access Point");
+    debugPrintln("EDBG: Disconnected from Wi-Fi and started Access Point");
 }
 
 void WiFiManager::saveCredentials(const String &ssid, const String &password) {
@@ -65,7 +78,7 @@ bool WiFiManager::tryConnect() {
     if (WiFi.waitForConnectResult() == WL_CONNECTED) {
         Serial.println("EDBG: Connected to Wi-Fi!");
         Serial.print("EDBG: IP Address: ");
-        Serial.println(WiFi.localIP());
+        Serial.println(WiFi.localIP().toString());
         connected = true;
         return true;
     }
@@ -79,9 +92,9 @@ void WiFiManager::startAccessPoint() {
     IPAddress apIP(192, 168, 4, 1);
     IPAddress netMsk(255, 255, 255, 0);
     WiFi.softAPConfig(apIP, apIP, netMsk);
-    Serial.println("EDBG: Started AP Mode. Connect to '" + String(AP_SSID) + "' with password '" + String(AP_PASSWORD) + "'");
-    Serial.print("EDBG: IP Address: ");
-    Serial.println(WiFi.softAPIP());
+    debugPrintln("EDBG: Started AP Mode. Connect to '" + String(AP_SSID) + "' with password '" + String(AP_PASSWORD) + "'");
+    debugPrint("EDBG: IP Address: ");
+    debugPrintln(WiFi.softAPIP().toString());
     connected = false;
 }
 
@@ -136,4 +149,16 @@ void WiFiManager::handleSetup() {
     server.send(200, "text/html", "<h1>Saved! Restarting...</h1>");
     delay(1000);
     ESP.restart();
+}
+
+void WiFiManager::debugPrint(const String &message) {
+    if (debugClient && debugClient.connected()) {
+        debugClient.print(message);  // Send to debug client
+    }
+}
+
+void WiFiManager::debugPrintln(const String &message) {
+    if (debugClient && debugClient.connected()) {
+        debugClient.println(message);  // Send to debug client
+    }
 }

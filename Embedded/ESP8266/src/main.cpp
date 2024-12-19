@@ -39,13 +39,16 @@ void loop() {
             }
 
             if (allSent) {
-                Serial.println("EDBG: All data successfully sent to API.");
+                wifiManager.debugPrintln("EDBG: All data successfully sent to API.");
                 deviceManager.clearObjectList();
             } else {
-                Serial.println("EDBG: Failed to send all data to API.");
+                wifiManager.debugPrintln("EDBG: Failed to send all data to API.");
             }
         }
     }
 
     delay(100);
 }
+
+
+// TODO: {"row":1,"col":1,"status":"Pause"} at ESP8266
