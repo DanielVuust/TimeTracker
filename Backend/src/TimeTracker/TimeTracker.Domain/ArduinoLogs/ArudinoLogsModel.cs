@@ -17,8 +17,8 @@ public class ArduinoLogsModel : BaseModel
         ArduinoId = arduinoId;
     }
 
-    public static ArduinoLogsModel Create(Guid arduinoId, DateTime timestamp, string status)
+    public static ArduinoLogsModel Create(Guid arduinoid, DateTime timestamp, string status)
     {
-        return new ArduinoLogsModel(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow, arduinoId, new LogsModel(timestamp, status));
+        return new ArduinoLogsModel(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow, arduinoid, new LogsModel(timestamp, status));
     }
 }
