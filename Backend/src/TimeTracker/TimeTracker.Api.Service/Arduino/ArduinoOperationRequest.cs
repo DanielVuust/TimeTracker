@@ -5,7 +5,7 @@ namespace TimeRegistration.TimeTracker.Api.Service.Arduino;
 
 public class ArduinoOperationRequest<T> 
 {
-    [FromRoute] public Guid ArduinoId { get; set; }
+    [FromRoute(Name = "arduinoId")] public Guid ArduinoId { get; set; }
 
     [FromBody] 
     public T Details { get; set; }

@@ -1,19 +1,25 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using TimeRegistration.TimeTracker.Api.Service.GetTimeTracker;
+using TimeRegistration.TimeTracker.ApplicationServices.Component;
+using TimeRegistration.TimeTracker.Domain.ArduinoLogs;
 
 namespace TimeRegistration.TimeTracker.Api.Service.Arduino;
 
-public class CreateArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<CreateArduinoLogsRequestWithBody>.WithActionResult<ArduinoLogsResponse>
+public class CreateArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<CreateArduinoLogsRequestWithBody>.WithActionResult<IEnumerable<ArduinoLogsResponse>>
 {
-    public CreateArduinoLogsEndpoint()
+    private readonly ITimeTrackerCsvComponent _timeTrackerCsvComponent;
+
+    public CreateArduinoLogsEndpoint(ITimeTrackerCsvComponent timeTrackerCsvComponent)
     {
+        _timeTrackerCsvComponent = timeTrackerCsvComponent;
     }
 
     [HttpPost("api/arduino/{arduinoId:guid}/log")]
-    [ProducesResponseType(typeof(ArduinoLogsResponse), StatusCodes.Status201Created)] 
+    [ProducesResponseType(typeof(ArduinoLogsResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     [SwaggerOperation(
         Summary = "Create Arduino log data by Arduino id",
@@ -21,16 +27,25 @@ public class CreateArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<CreateArd
         OperationId = "CreateArduinoLogs",
         Tags = new[] { Constants.ApiTags.Arduino })
     ]
-    public override async Task<ActionResult<ArduinoLogsResponse>> HandleAsync([FromRoute] CreateArduinoLogsRequestWithBody request, CancellationToken cancellationToken = default)
+    public override async Task<ActionResult<IEnumerable<ArduinoLogsResponse>>> HandleAsync([FromRoute] CreateArduinoLogsRequestWithBody request, CancellationToken cancellationToken = default)
     {
-        //Call service/component to create Arduino logs
-        return new ActionResult<ArduinoLogsResponse>(new ArduinoLogsResponse(request.Details.Timestamp, request.Details.Status));
+        var arduinoLogsModel = new List<ArduinoLogsModel>();
 
+        foreach (var detail in request.Details)
+        {
+            arduinoLogsModel.Add(ArduinoLogsModel.Create(request.ArduinoId, detail.Timestamp, detail.Status));
+        }
+
+        var arduinoLogsModelResponse = _timeTrackerCsvComponent.UpsertArduinoLogsToCsv(arduinoLogsModel);
+
+        var arduinoLogsResponse = arduinoLogsModelResponse.Select(x => new ArduinoLogsResponse(x.LogsModel.Timestamp, x.LogsModel.Status));
+
+        return new ActionResult<IEnumerable<ArduinoLogsResponse>>(arduinoLogsResponse);
     }
 }
 
 
-public sealed class CreateArduinoLogsRequestWithBody : ArduinoOperationRequest<CreateUserRequestDetails>
+public sealed class CreateArduinoLogsRequestWithBody : ArduinoOperationRequest<IEnumerable<CreateUserRequestDetails>>
 {
 }
 
