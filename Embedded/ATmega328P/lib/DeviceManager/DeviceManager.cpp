@@ -2,6 +2,7 @@
 #include "DeviceManager.h"
 #include <ArduinoJson.h>
 #include <RTClib.h>
+#include <SPI.h>
 
 DeviceManager::DeviceManager() : buttonTaskCount(0), rtc() {}
 
@@ -47,7 +48,15 @@ void DeviceManager::handleButtons() {
                         obj.deviceId = deviceId;
                         obj.timestamp = getCurrentTimestamp();
                         obj.status = buttonTasks[i].status;
-                        sendDataObject(obj);
+
+                        if (obj.status == "Disconnect") {
+                            // If status is Disconnect, send ECMD: DISCONNECT
+                            Serial.println("ECMD: DISCONNECT");
+                        } else {
+                            // Otherwise, send a normal data object
+                            sendDataObject(obj);
+                        }
+
                         delay(200); // Debounce delay
                         break;
                     }

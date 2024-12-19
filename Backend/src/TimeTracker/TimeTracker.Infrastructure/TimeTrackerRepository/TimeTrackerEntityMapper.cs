@@ -1,5 +1,4 @@
-﻿using TimeRegistration.TimeTracker.Domain.ArduinoLogs;
-
+using TimeRegistration.TimeTracker.Domain.ArduinoLogs;
 namespace TimeRegistration.TimeTracker.Infrastructure.TimeTrackerRepository;
 internal static class TimeTrackerEntityMapper
 {
