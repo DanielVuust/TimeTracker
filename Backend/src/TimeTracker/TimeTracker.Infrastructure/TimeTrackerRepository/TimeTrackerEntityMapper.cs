@@ -1,9 +1,9 @@
-﻿using TimeRegistration.TimeTracker.Domain.TimeTracker;
+﻿using TimeRegistration.TimeTracker.Domain.ArduinoLogs;
 
 namespace TimeRegistration.TimeTracker.Infrastructure.TimeTrackerRepository;
 internal static class TimeTrackerEntityMapper
 {
-    internal static TimeTrackerEntity Map(TimeTrackerModel model)
+    internal static TimeTrackerEntity Map(ArduinoLogsModel model)
     {
         return new TimeTrackerEntity(
             model.Id,
@@ -12,9 +12,9 @@ internal static class TimeTrackerEntityMapper
             );
     }
 
-    internal static TimeTrackerModel Map(TimeTrackerEntity entity)
+    internal static ArduinoLogsModel Map(TimeTrackerEntity entity)
     {
-        return new TimeTrackerModel(
+        return new ArduinoLogsModel(
             entity.Id,
             entity.CreatedUtc,
             entity.ModifiedUtc
