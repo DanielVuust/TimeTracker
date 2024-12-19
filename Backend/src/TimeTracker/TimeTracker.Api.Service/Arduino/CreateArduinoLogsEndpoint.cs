@@ -9,7 +9,7 @@ using TimeRegistration.TimeTracker.Domain.ArduinoLogs;
 
 namespace TimeRegistration.TimeTracker.Api.Service.Arduino;
 
-public class CreateArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<CreateArduinoLogsRequestWithBody>.WithActionResult<IEnumerable<ArduinoLogsResponse>>
+public class CreateArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<CreateArduinoLogsRequestWithBody>.WithActionResult
 {
     private readonly ITimeTrackerCsvComponent _timeTrackerCsvComponent;
 
@@ -27,34 +27,15 @@ public class CreateArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<CreateArd
         OperationId = "CreateArduinoLogs",
         Tags = new[] { Constants.ApiTags.Arduino })
     ]
-    public override async Task<ActionResult<IEnumerable<ArduinoLogsResponse>>> HandleAsync([FromRoute] CreateArduinoLogsRequestWithBody request, CancellationToken cancellationToken = default)
+    public override async Task<ActionResult> HandleAsync([FromRoute] CreateArduinoLogsRequestWithBody request, CancellationToken cancellationToken = default)
     {
-        var arduinoLogsModel = new List<ArduinoLogsModel>();
+        _timeTrackerCsvComponent.UpsertArduinoLogsToCsv(request.Details, request.ArduinoId.ToString());
 
-        foreach (var detail in request.Details)
-        {
-            arduinoLogsModel.Add(ArduinoLogsModel.Create(request.ArduinoId, detail.Timestamp, detail.Status));
-        }
-
-        var arduinoLogsModelResponse = _timeTrackerCsvComponent.UpsertArduinoLogsToCsv(arduinoLogsModel);
-
-        var arduinoLogsResponse = arduinoLogsModelResponse.Select(x => new ArduinoLogsResponse(x.LogsModel.Timestamp, x.LogsModel.Status));
-
-        return new ActionResult<IEnumerable<ArduinoLogsResponse>>(arduinoLogsResponse);
+        return new EmptyResult();
     }
 }
 
 
-public sealed class CreateArduinoLogsRequestWithBody : ArduinoOperationRequest<IEnumerable<CreateUserRequestDetails>>
+public sealed class CreateArduinoLogsRequestWithBody : ArduinoOperationRequest<IEnumerable<ArduinoLog>>
 {
-}
-
-[SwaggerSchema(Nullable = false, Required = new[] { "timestamp", "status" })]
-public sealed class CreateUserRequestDetails
-{
-    [JsonPropertyName("timestamp")]
-    public DateTime Timestamp { get; set; }
-
-    [JsonPropertyName("status")]
-    public string Status { get; set; }
 }

@@ -1,13 +1,17 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using TimeRegistration.TimeTracker.ApplicationServices.Component;
 
 namespace TimeRegistration.TimeTracker.Api.Service.GetTimeTracker;
 
-public class GetArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<Guid>.WithActionResult<IEnumerable<ArduinoLogsResponse>>
+public class GetArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<Guid>.WithActionResult<IEnumerable<ArduinoLog>>
 {
-    public GetArduinoLogsEndpoint()
+    private readonly ITimeTrackerCsvComponent _timeTrackerCsvComponent;
+
+    public GetArduinoLogsEndpoint(ITimeTrackerCsvComponent timeTrackerCsvComponent)
     {
+        _timeTrackerCsvComponent = timeTrackerCsvComponent;
     }
 
     [HttpGet("api/arduino/{arduinoId:guid}/logs")]
@@ -19,17 +23,9 @@ public class GetArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<Guid>.WithAc
         OperationId = "GetArduinoLogs",
         Tags = new[] { Constants.ApiTags.Arduino })
     ]
-    public override async Task<ActionResult<IEnumerable<ArduinoLogsResponse>>> HandleAsync([FromRoute] Guid arduinoId, CancellationToken cancellationToken = default)
+    public override async Task<ActionResult<IEnumerable<ArduinoLog>>> HandleAsync([FromRoute] Guid arduinoId, CancellationToken cancellationToken = default)
     {
-        //var uniqueId = Guid.NewGuid();  
-        var timeStamp = DateTime.UtcNow;
-        var status = "Start";
-        //Call service/component to get Arduino logs from database
-        var arduinoLogsResponse = new List<ArduinoLogsResponse>()
-        {
-            new ArduinoLogsResponse(timeStamp, status),
-            new ArduinoLogsResponse(timeStamp, status)
-        };
-        return new ActionResult<IEnumerable<ArduinoLogsResponse>>(arduinoLogsResponse);
+        var arduinoLogsResponse = this._timeTrackerCsvComponent.GetArduinoLogsFromCsv(arduinoId.ToString());
+        return new ActionResult<IEnumerable<ArduinoLog>>(arduinoLogsResponse);
     }
 }

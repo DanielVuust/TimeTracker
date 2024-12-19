@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using TimeRegistration.TimeTracker.ApplicationServices.Repositories.Operations;
 using TimeRegistration.TimeTracker.ApplicationServices.Repositories.TimeTracker;
 using TimeRegistration.TimeTracker.Infrastructure.TimeTrackerRepository;
+using TimeRegistration.TimeTracker.ApplicationServices.Component;
+using TimeRegistration.TimeTracker.Infrastructure.TimeTrackerCsv;
 
 namespace TimeRegistration.TimeTracker.Infrastructure.Installers;
 
@@ -13,6 +15,7 @@ public sealed class ServiceInstaller : IDependencyInstaller
     public void Install(IServiceCollection serviceCollection, DependencyInstallerOptions options)
     {
         serviceCollection.AddTransient<IRunOnStartupExecution, RunOnStartupExecution>();
+        serviceCollection.AddTransient<ITimeTrackerCsvComponent, TimeTrackerCsvComponent>();
         AddRepositories(serviceCollection, options.Configuration);
     }
 
@@ -22,7 +25,7 @@ public sealed class ServiceInstaller : IDependencyInstaller
 
         serviceCollection.AddDbContext<TimeTrackerContext>(options => options.UseSqlServer(connectionString));
 
-        serviceCollection.AddScoped<ITimeTrackerRepository, TimeTrackerRepository.TimeTrackerRepository>();
+        //serviceCollection.AddScoped<ITimeTrackerRepository, TimeTrackerRepository.TimeTrackerRepository>();
         serviceCollection.AddScoped<IOperationRepository, OperationRepository.OperationRepository>();
     }
 }
