@@ -17,7 +17,7 @@ export class ListComponent {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.http.get('https://localhost:58405/api/arduino/31484feb-c240-4e17-b349-12952e57d91a/logs')
+    this.http.get('https://localhost:58405/api/arduino/bb35900c-0230-4929-a484-5113a126b214/logs')
       .subscribe(response => {
         console.log('API response:', response);
         this.dataSource = new MatTableDataSource<any>(response as any[]);

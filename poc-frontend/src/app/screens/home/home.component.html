@@ -1,23 +1,26 @@
 <div>
     <mat-form-field>
         <mat-label>Input for Button 1</mat-label>
-        <input matInput #inputValue1>
+        <input matInput #inputValue1 value="Slut arbejde">
     </mat-form-field>
-    <button mat-raised-button color="primary" (click)="makeApiRequest(inputValue1.value)">Button 1</button>
+    <button mat-raised-button color="primary" (click)="addNewAction(inputValue1.value)">Save input</button>
 </div>
-
 <div>
     <mat-form-field>
         <mat-label>Input for Button 2</mat-label>
-        <input matInput #inputValue2>
+        <input matInput #inputValue2 value="Start arbejde">
     </mat-form-field>
-    <button mat-raised-button color="accent" (click)="makeApiRequest(inputValue2.value)">Button 2</button>
+    <button mat-raised-button color="primary" (click)="addNewAction(inputValue2.value)">Save input</button>
 </div>
-
 <div>
     <mat-form-field>
         <mat-label>Input for Button 3</mat-label>
-        <input matInput #inputValue3>
+        <input matInput #inputValue3 value="Start frokost">
     </mat-form-field>
-    <button mat-raised-button color="warn" (click)="makeApiRequest(inputValue3.value)">Button 3</button>
+    <button mat-raised-button color="primary" (click)="addNewAction(inputValue3.value)">Save input</button>
 </div>
+<button mat-raised-button color="primary" (click)="makeApiRequest()">Send to backend</button>
+<p>
+    {{convertActionToText()}}
+
+</p>

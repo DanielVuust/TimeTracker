@@ -15,12 +15,25 @@ import { NgModule } from '@angular/core';
 })
 export class HomeComponent {
   constructor(private http: HttpClient) {}
-
-  makeApiRequest(inputValue: string) {
-    console.log('Input value:', inputValue);
-    const apiUrl = 'https://api.example.com/endpoint';
-    this.http.post(apiUrl, { data: inputValue }).subscribe(response => {
+  actions: any[] = [];
+  makeApiRequest() {
+    const apiUrl = 'https://localhost:58405/api/arduino/bb35900c-0230-4929-a484-5113a126b214/log';
+    this.http.post(apiUrl, this.actions).subscribe(response => {
       console.log('API response:', response);
     });
+    this.actions = [];
   }
+
+  addNewAction(action: string) {
+    this.actions.push({
+      status: action,
+      timestamp: new Date(),
+    });
+  }
+  convertActionToText() {
+    return this.actions.map(action => {
+      return `${action.status} at ${action.timestamp}\n`;
+    });
+  }
+
 }
