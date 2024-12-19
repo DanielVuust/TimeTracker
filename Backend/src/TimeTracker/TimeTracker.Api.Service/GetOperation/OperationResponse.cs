@@ -11,7 +11,7 @@ public static class OperationMapper
     {
         return new OperationResponse(
             operation.RequestId,
-            operation.TimeTrackerId,
+            operation.ArduinoId,
             operation.Name,
             operation.Status,
             operation.CreatedBy,

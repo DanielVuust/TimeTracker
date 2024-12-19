@@ -16,7 +16,7 @@ internal class OperationEntityConfiguration : BaseEntityConfiguration<OperationE
             .HasMaxLength(64)
             .IsRequired()
             .HasConversion<string>();
-        builder.Property(p => p.TimeTrackerId).IsRequired();
+        builder.Property(p => p.ArduinoId).IsRequired();
         builder.Property(p => p.CreatedBy)
             .HasMaxLength(64)
             .IsRequired();
@@ -31,6 +31,6 @@ internal class OperationEntityConfiguration : BaseEntityConfiguration<OperationE
 
 
         builder.HasIndex(p => new { p.RequestId }).IsUnique();
-        builder.HasIndex(p => new { p.TimeTrackerId });
+        builder.HasIndex(p => new { p.ArduinoId });
     }
 }
