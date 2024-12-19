@@ -8,8 +8,11 @@ internal static class TimeTrackerEntityMapper
         return new TimeTrackerEntity(
             model.Id,
             model.CreatedUtc,
-            model.ModifiedUtc
-            );
+            model.ModifiedUtc,
+            ArduinoEntityMapper.Map(model.Arduino),
+            model.Timestamp,
+            model.Status
+        );
     }
 
     internal static TimeTrackerModel Map(TimeTrackerEntity entity)
@@ -17,7 +20,10 @@ internal static class TimeTrackerEntityMapper
         return new TimeTrackerModel(
             entity.Id,
             entity.CreatedUtc,
-            entity.ModifiedUtc
-            );
+            entity.ModifiedUtc,
+            ArduinoEntityMapper.Map(entity.Arduino),
+            entity.Timestamp,
+            entity.Status
+        );
     }
 }

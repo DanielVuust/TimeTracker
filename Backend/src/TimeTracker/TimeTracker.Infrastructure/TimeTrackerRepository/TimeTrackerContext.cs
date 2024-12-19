@@ -1,7 +1,8 @@
-﻿using TimeRegistration.TimeTracker.Infrastructure.OperationRepository;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using TimeRegistration.TimeTracker.Infrastructure.OperationRepository;
 
 namespace TimeRegistration.TimeTracker.Infrastructure.TimeTrackerRepository;
+
 public class TimeTrackerContext : DbContext
 {
     public TimeTrackerContext(DbContextOptions options) : base(options)
@@ -10,6 +11,7 @@ public class TimeTrackerContext : DbContext
 
     public DbSet<OperationEntity>? Operations { get; set; }
     public DbSet<TimeTrackerEntity>? TimeTrackers { get; set; }
+    public DbSet<TimeTrackerEntity>? ArduinoEntity { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
