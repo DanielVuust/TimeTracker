@@ -14,7 +14,7 @@ void setup() {
     deviceManager.setButtonTask(0, 0, "Start");   // Button at row 0, col 0 triggers "Start"
     deviceManager.setButtonTask(1, 1, "Stop");    // Button at row 1, col 1 triggers "Stop"
     deviceManager.setButtonTask(2, 2, "Reset");   // Button at row 2, col 2 triggers "Reset"
-    deviceManager.setButtonTask(3, 3, "Confirm"); // Button at row 3, col 3 triggers "Confirm"
+    deviceManager.setButtonTask(3, 3, "Disconnect"); // Button at row 3, col 3 triggers "Confirm"
 
     Serial.begin(9600);
     Serial.println("Device ID: " + deviceManager.getDeviceId());

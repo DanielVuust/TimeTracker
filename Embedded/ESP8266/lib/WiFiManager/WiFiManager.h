@@ -36,48 +36,57 @@ public:
     void handleDisconnect();
 
     template <typename T>
-    bool sendDataToUrl(const String &url, const T &data);
+    bool sendDataToUrl(const String &url, const T &data, const String &excludeField = "");
 };
 
 template <typename T>
-bool WiFiManager::sendDataToUrl(const String &url, const T &data) {
+bool WiFiManager::sendDataToUrl(const String &url, const T &data, const String &excludeField) {
     if (!isConnected()) {
-        Serial.println("EDBG: Not connected to Wi-Fi. Cannot send data to API.");
+        Serial.println("EDBG: Not connected to Wi-Fi. Cannot send data.");
         return false;
     }
 
     // Convert data to JSON
     JsonDocument doc;
     data.toJson(doc);
+
+    // Optionally exclude a field
+    if (!excludeField.isEmpty()) {
+        doc.remove(excludeField);
+    }
+
     String jsonString;
     serializeJson(doc, jsonString);
 
     WiFiClient client;
-    if (client.connect(url.c_str(), 80)) {
-        client.println("POST / HTTP/1.1");
-        client.println("Host: " + url);
+    String host = url.substring(0, url.indexOf("/", 8)); // Extract host
+    String path = url.substring(url.indexOf("/", 8));    // Extract path
+
+    if (client.connect(host.c_str(), 80)) {
+        client.println("POST " + path + " HTTP/1.1");
+        client.println("Host: " + host);
         client.println("Content-Type: application/json");
         client.print("Content-Length: ");
         client.println(jsonString.length());
         client.println();
         client.println(jsonString);
 
-        Serial.println("DBG: Data sent: " + jsonString);
+        Serial.println("EDBG: Data sent: " + jsonString);
 
         unsigned long timeout = millis();
         while (client.available() == 0) {
-            if (millis() - timeout > 5000) { 
+            if (millis() - timeout > 5000) {
                 Serial.println("EDBG: Server response timeout.");
                 client.stop();
                 return false;
             }
         }
 
-        // Response
+        // Handle response
         String responseLine = client.readStringUntil('\n');
         Serial.println("Response: " + responseLine);
         if (responseLine.startsWith("HTTP/1.1 200")) {
-            Serial.println("DBG: Data successfully received by the server.");
+            Serial.println("EDBG: Data successfully received by the server.");
             client.stop();
             return true;
         } else {
@@ -86,7 +95,7 @@ bool WiFiManager::sendDataToUrl(const String &url, const T &data) {
             return false;
         }
     } else {
-        Serial.println("EDBG: Failed to connect to API.");
+        Serial.println("EDBG: Failed to connect to server.");
         return false;
     }
 }
