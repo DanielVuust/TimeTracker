@@ -15,10 +15,11 @@ public class ArduinoLogsModel : BaseModel
         : base(id, createdUtc, modifiedUtc)
     {
         ArduinoId = arduinoId;
+        LogsModel = logsModel;
     }
 
-    public static ArduinoLogsModel Create(Guid arduinoid, DateTime timestamp, string status)
+    public static ArduinoLogsModel Create(Guid arduinoId, DateTime timestamp, string status)
     {
-        return new ArduinoLogsModel(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow, arduinoid, new LogsModel(timestamp, status));
+        return new ArduinoLogsModel(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow, arduinoId, new LogsModel(timestamp, status));
     }
 }
