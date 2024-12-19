@@ -1,12 +1,13 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using TimeRegistration.TimeTracker.Api.Service.GetTimeTracker;
 
 namespace TimeRegistration.TimeTracker.Api.Service.Arduino;
 
-public class CreateArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<CreateArduinoLogsRequestWithBody>.WithActionResult<ArduinoLogsResponse>
+public class CreateArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<CreateArduinoLogsRequestWithBody>.WithActionResult<IEnumerable<ArduinoLogsResponse>>
 {
     public CreateArduinoLogsEndpoint()
     {
@@ -21,11 +22,15 @@ public class CreateArduinoLogsEndpoint : EndpointBaseAsync.WithRequest<CreateArd
         OperationId = "CreateArduinoLogs",
         Tags = new[] { Constants.ApiTags.Arduino })
     ]
-    public override async Task<ActionResult<ArduinoLogsResponse>> HandleAsync([FromRoute] CreateArduinoLogsRequestWithBody request, CancellationToken cancellationToken = default)
+    public override async Task<ActionResult<IEnumerable<ArduinoLogsResponse>>> HandleAsync([FromRoute] CreateArduinoLogsRequestWithBody request, CancellationToken cancellationToken = default)
     {
         //Call service/component to create Arduino logs
-        return new ActionResult<ArduinoLogsResponse>(new ArduinoLogsResponse(request.Details.Timestamp, request.Details.Status));
+        var arduinoLogsResponses = new List<ArduinoLogsResponse>() 
+        {
+            new ArduinoLogsResponse(request.Details.Timestamp, request.Details.Status)
+        };
 
+        return new ActionResult<IEnumerable<ArduinoLogsResponse>>(arduinoLogsResponses);
     }
 }
 
